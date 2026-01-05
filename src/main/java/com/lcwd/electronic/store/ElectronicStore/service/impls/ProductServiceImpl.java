@@ -2,6 +2,7 @@ package com.lcwd.electronic.store.ElectronicStore.service.impls;
 
 import com.lcwd.electronic.store.ElectronicStore.dtos.ProductDto;
 import com.lcwd.electronic.store.ElectronicStore.entities.Product;
+import com.lcwd.electronic.store.ElectronicStore.exception.ResourceNotFoundException;
 import com.lcwd.electronic.store.ElectronicStore.repositories.ProductRepository;
 import com.lcwd.electronic.store.ElectronicStore.service.interf.ProductService;
 import org.modelmapper.ModelMapper;
@@ -24,7 +25,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto updateProduct(ProductDto productDto, String productId) {
-        return null;
+        Product productToUpdate = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product not found by given ID"));
+        productToUpdate.setTitle(productDto.getTitle());
+        productToUpdate.setDescription(productDto.getDescription());
+        productToUpdate.setPrice(productDto.getPrice());
+        productToUpdate.setDiscountedPrice(productDto.getDiscountedPrice());
+        productToUpdate.setAvailableQuantity(productDto.getAvailableQuantity());
+        productToUpdate.setLive(productDto.isLive());
+        productToUpdate.setInStock(productDto.isInStock());
+        productToUpdate.setAddedDate(productDto.getAddedDate());
+        Product updatedProduct = productRepository.save(productToUpdate);
+        return mapper.map(updatedProduct, ProductDto.class);
     }
 
     @Override
