@@ -83,9 +83,9 @@ public class UserServiceImpl implements UserService {
 //        Creating pageable object
 //        Page number starts from 0
         Sort sort = (sortBy.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort); // Pageable object is now created holding page number and page size
-        Page<User> page = userRepository.findAll(pageable);
-        return Helper.getPageableResponse(page, UserDto.class);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort); // Pageable object is now created holding UserPage number and UserPage size
+        Page<User> UserPage = userRepository.findAll(pageable);
+        return Helper.getPageableResponse(UserPage, UserDto.class);
     }
 
     @Override
@@ -101,10 +101,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> searchUser(String keyword) {
-        List<User> users = userRepository.findByNameContaining(keyword);
-        return users.stream().map(this::EntityToDto).toList();
+    public PageableResponse<UserDto> searchUser(String keyword, int pageNumber, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("desc") ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
 
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        Page<User> userPage = userRepository.findByNameContaining(keyword, pageable);
+        return Helper.getPageableResponse(userPage, UserDto.class);
     }
 
     private UserDto EntityToDto(User savedUser) {

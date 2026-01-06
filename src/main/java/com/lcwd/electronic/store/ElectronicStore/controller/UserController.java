@@ -9,6 +9,7 @@ import com.lcwd.electronic.store.ElectronicStore.service.interf.FileService;
 import com.lcwd.electronic.store.ElectronicStore.service.interf.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.hibernate.query.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,8 +81,14 @@ public class UserController {
     }
 //    search user
     @GetMapping("/search/{keyword}")
-    public ResponseEntity<List<UserDto>> searchUser(@PathVariable("keyword") String keyword){
-        return new ResponseEntity<>(userService.searchUser(keyword), HttpStatus.OK);
+    public ResponseEntity<PageableResponse<UserDto>> searchUser(
+            @PathVariable String keyword,
+            @RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "name") String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir
+    ){
+        return new ResponseEntity<>(userService.searchUser(keyword, pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
     }
 
 //    Upload user image

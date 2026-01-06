@@ -18,14 +18,14 @@ public interface ProductService {
     void deleteProduct(String productId);
 
 //    get single
-    List<ProductDto> getProductById(String productId);
+    ProductDto getProductById(String productId);
 
 //    get all
-    List<ProductDto> getAllProduct();
+    PageableResponse<ProductDto> getAllProduct(int pageNumber, int pageSize, String sortBy, String sortDir);
 
 //    get all live
-    List<ProductDto> getAllLiveProduct();
+    PageableResponse<ProductDto> getAllLiveProduct(int pageNumber, int pageSize, String sortBy, String sortDir);
 
 //    search product
-    List<ProductDto> searchProduct(String keyword);
+    PageableResponse<ProductDto> searchProduct(String keyword, int pageNumber, int pageSize, String sortBy, String sortDir);
 }
